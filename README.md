@@ -30,7 +30,7 @@ See [PostCSS] docs for examples for your environment.
 
 ### includeRemote
 
-Type: `boolean` 
+Type: `boolean`  
 Default: `false`
 
 If you set it to `true`, it will handle the remote url, request the remote resource
@@ -38,7 +38,7 @@ and calculate the md5 hash.
 
 ### replacer(url, hash)
 
-Type: `function`
+Type: `function`  
 Default: `defaultReplacer(url, hash)`
 
 It will receive the `url` and `hash` as its parameter, you can specify a function to handle the url manually.
@@ -54,7 +54,7 @@ function replacer(url, hash) {
 
 ### hashLength
 
-Type: `number` 
+Type: `number`  
 Default: `10`
 
 The length of the hash string, the default value is `10`. That's enough!
@@ -70,4 +70,4 @@ The length of the hash string, the default value is `10`. That's enough!
 [PostCSS]: https://github.com/postcss/postcss
 [ci-img]:  https://travis-ci.org/yuezk/postcss-urlrev.svg
 [ci]:      https://travis-ci.org/yuezk/postcss-urlrev
-[MIT]:     MIT
+[MIT]:     LICENSE
