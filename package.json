@@ -20,15 +20,19 @@
   },
   "homepage": "https://github.com/yuezk/postcss-urlrev",
   "dependencies": {
+    "bluebird": "^2.9.34",
     "postcss": "^4.1.13"
   },
   "devDependencies": {
     "chai": "^3.0.0",
+    "express": "^4.13.3",
     "gulp": "^3.9.0",
     "gulp-eslint": "^0.14.0",
-    "gulp-mocha": "^2.1.2"
+    "gulp-mocha": "^2.1.2",
+    "mocha": "^2.2.5"
   },
   "scripts": {
-    "test": "gulp"
+    "test": "./node_modules/.bin/mocha",
+    "coverage": " istanbul cover node_modules/.bin/_mocha -- -R spec"
   }
 }

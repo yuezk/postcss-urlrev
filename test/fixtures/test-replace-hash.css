@@ -1,0 +1,5 @@
+body {
+    background: url(images/test.png?v=2015);
+    background: url(images/test.png?v=2015&type=image);
+    background: url(images/test.png?type=image&v=2015);
+}
