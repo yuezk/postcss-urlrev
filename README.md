@@ -19,6 +19,10 @@
 
 ## Usage
 
+```sh
+npm install --save-dev postcss-urlrev
+```
+
 ```js
 postcss([ require('postcss-urlrev') ])
 ```
