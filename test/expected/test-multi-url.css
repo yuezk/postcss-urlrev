@@ -1,0 +1,3 @@
+body {
+    background: url(images/test.png?v=e19ac7dee6), url(images/test.svg?v=7647d17889), url(images/postcss.png?v=fc586a14d2);
+}
