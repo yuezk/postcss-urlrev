@@ -10,34 +10,95 @@ var crypto = require('crypto');
 
 var postcss = require('postcss');
 
-function getUrlMeta(string) {
-    var reg = /url\((\s*)(['"]?)(.+?)\2(\s*)\)/;
-    var match = reg.exec(string);
-
-    return {
-        source: match[0],
-        before: match[1],
-        quote: match[2],
-        value: match[3],
-        after: match[4],
-        parsed: url.parse(match[3])
-    };
-}
+/**
+ * Return `true` if the given path is http/https
+ *
+ * @param  {String}  filePath - path
+ * @return {Boolean}
+ */
 
 function isRemotePath(filePath) {
     return /^https?:\/\//.test(filePath);
 }
 
-function getResourcePath(str, dirname) {
+/**
+ * Whether or not the url should be inluded
+ *
+ * @param  {Object} meta - url meta info
+ * @param  {Object} opts - options
+ * @return {Boolean}
+ */
+
+function validUrl(meta, opts) {
+    // ignore absolute urls, hashes or data uris
+    if (meta.value.indexOf('/') === 0 ||
+        meta.value.indexOf('data:') === 0 ||
+        meta.value.indexOf('#') === 0
+    ) {
+        return false;
+    }
+
+    // do not handle the http/https urls if `includeRemote` is false
+    if (!opts.includeRemote && isRemotePath(meta.value)) {
+        return false;
+    }
+
+    return true;
+}
+
+/**
+ * Get all `url()`s, and return the meta info
+ *
+ * @param  {String} value - decl.value
+ * @param  {Object} opts  - options
+ * @return {Array}        - the urls
+ */
+
+function getUrls(value, opts) {
+    var reg = /url\((\s*)(['"]?)(.+?)\2(\s*)\)/g;
+    var match;
+    var urls = [];
+
+    while ((match = reg.exec(value)) !== null) {
+        var meta = {
+            source: match[0],
+            before: match[1],
+            quote: match[2],
+            value: match[3],
+            after: match[4]
+        };
+        if (validUrl(meta, opts)) {
+            urls.push(meta);
+        }
+    }
+    return urls;
+}
+
+/**
+ * Get the absolute path of the url, relative to the basePath
+ *
+ * @param  {String} str      - the url
+ * @param  {String} basePath - the relative path
+ * @return {String}          - the absolute path
+ */
+
+function getResourcePath(str, basePath) {
     var filePath;
 
     if (isRemotePath(str)) {
         filePath = str;
     } else {
-        filePath = path.resolve(dirname, url.parse(str).pathname);
+        filePath = path.resolve(basePath, url.parse(str).pathname);
     }
     return Promise.resolve(filePath);
 }
+
+/**
+ * Get the hash value of the remote resource
+ *
+ * @param  {String} file - the remote path
+ * @return {Promise}     - the Promise
+ */
 
 function getRemoteFileHash(file) {
     return new Promise(function (resolve, reject) {
@@ -56,33 +117,61 @@ function getRemoteFileHash(file) {
     });
 }
 
+/**
+ * Get the hash value of the local resource
+ *
+ * @param  {String} file - the local path
+ * @return {Promise}     - the Promise
+ */
+
 function getLocalFileHash(file) {
     return fs.readFileAsync(file).then(function (contents) {
         return crypto.createHash('md5').update(contents).digest('hex');
     });
 }
 
-function getHash() {
-    return function (filepath) {
-        if (isRemotePath(filepath)) {
-            return getRemoteFileHash(filepath);
-        }
-        return getLocalFileHash(filepath);
-    };
+/**
+ * Get the hash of the given path
+ *
+ * @param  {String} filePath - the file path
+ * @return {Promise}         - the Promise
+ */
+
+function getHash(filePath) {
+    if (isRemotePath(filePath)) {
+        return getRemoteFileHash(filePath);
+    }
+    return getLocalFileHash(filePath);
 }
 
-function createUrl(urlMeta, opts) {
+/**
+ * Generate a url() creator based on the url meta info and the options.
+ * The creator receive a hash as its parameter
+ *
+ * @param  {Object} meta - the url meta info
+ * @param  {Object} opts - the options
+ * @return {Function}    - the url creator
+ */
+
+function createUrl(meta, opts) {
     return function (hash) {
-        urlMeta.value = opts.replacer(urlMeta.value, hash);
+        meta.value = opts.replacer(meta.value, hash);
         return 'url(' +
-            urlMeta.before +
-            urlMeta.quote +
-            urlMeta.value +
-            urlMeta.quote +
-            urlMeta.after +
+            meta.before +
+            meta.quote +
+            meta.value +
+            meta.quote +
+            meta.after +
         ')';
     };
 }
+
+/**
+ * Generate a default replacer based on the hashLength parameter
+ *
+ * @param  {Number} hashLength - the hash length
+ * @return {Function}          - the replacer function
+ */
 
 function defaultReplacer(hashLength) {
     hashLength = Math.max(0, hashLength || 10);
@@ -98,31 +187,78 @@ function defaultReplacer(hashLength) {
     };
 }
 
+/**
+ * Process the single `url()` pattern
+ *
+ * @param  {String} basePath - the basePath relative to
+ * @param  {Object} opts     - the options
+ * @return {Promise}          - the Promise
+ */
+
+function processUrl(basePath, opts) {
+    return function (meta) {
+        return getResourcePath(meta.value, basePath)
+            .then(getHash)
+            .then(createUrl(meta, opts))
+            .then(function (newUrl) {
+                meta.newUrl = newUrl;
+                return meta;
+            });
+    };
+}
+
+/**
+ * Replace the raw value's `url()` segment to the new value
+ *
+ * @param  {String} raw - the raw value
+ * @return {String}     - the new value
+ */
+
+function repalceUrls(raw) {
+    return function (urls) {
+        urls.forEach(function (item) {
+            raw = raw.replace(item.source, item.newUrl);
+        });
+
+        return raw;
+    };
+}
+
+
+/**
+ * The error handler
+ *
+ * @param  {Object} result - the postcss result object
+ * @param  {Object} decl   - the postcss declaration
+ * @return {Function}      - the error handler
+ */
+
+function handleError(result, decl) {
+    return function (err) {
+        result.warn(err, {node: decl});
+    };
+}
+
+/**
+ * Process one declaration
+ *
+ * @param  {Object} result - the postcss result object
+ * @param  {Object} decl   - the postcss declaration
+ * @param  {String} from   - source
+ * @param  {Object} opts   - the plugin options
+ * @return {Promise}       - the Promise
+ */
 
 function processDecl(result, decl, from, opts) {
     var inputfile = decl.source && decl.source.input && decl.source.input.file;
     var dirname = inputfile ? path.dirname(inputfile) : path.dirname(from);
-    var urlMeta = getUrlMeta(decl.value);
+    var basePath = opts.basePath || dirname;
 
-    // ignore absolute urls, hashes or data uris
-    if (urlMeta.value.indexOf('/') === 0 ||
-        urlMeta.value.indexOf('data:') === 0 ||
-        urlMeta.value.indexOf('#') === 0
-    ) {
-        return Promise.resolve();
-    }
-
-    // do not handle the http/https urls if `includeRemote` is false
-    if (!opts.includeRemote && isRemotePath(urlMeta.value)) {
-        return Promise.resolve();
-    }
-
-    return getResourcePath(urlMeta.value, dirname)
-        .then(getHash())
-        .then(createUrl(urlMeta, opts))
-        .then(function (newUrl) {
-            decl.value = newUrl;
-        });
+    return Promise.map(getUrls(decl.value, opts), processUrl(basePath, opts))
+        .then(repalceUrls(decl.value))
+        .then(function (newValue) {
+            decl.value = newValue;
+        }, handleError(result, decl));
 }
 
 module.exports = postcss.plugin('postcss-urlrev', function (opts) {

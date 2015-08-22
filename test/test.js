@@ -11,6 +11,8 @@ var server;
 app.use(express.static(path.join(__dirname, 'fixtures')));
 
 // md5 images/test.png => e19ac7dee652fdbcbaa7cf7f3b998fa1
+// md5 images/test.svg => 7647d178899148ad0a37527990d14754
+// md5 images/postcss.png => fc586a14d21f0db23f8d2dc58e62ff6c
 // md5 test-local.css => 85c1934d3ceb0ae4c4b7f6f3814a79c9
 
 var test = function (input, output, opts, done) {
@@ -136,6 +138,24 @@ describe('postcss-urlrev', function () {
             var input = 'test/fixtures/test-hash-length-max.css';
             var output = 'test/expected/test-hash-length-max.css';
             test(input, output, { hashLength: 100 }, done);
+        }
+    );
+
+    it(
+        'should not affect other value in the background property',
+        function (done) {
+            var input = 'test/fixtures/test-url-other.css';
+            var output = 'test/expected/test-url-other.css';
+            test(input, output, { }, done);
+        }
+    );
+
+    it(
+        'should append hash to each url() in the background property',
+        function (done) {
+            var input = 'test/fixtures/test-multi-url.css';
+            var output = 'test/expected/test-multi-url.css';
+            test(input, output, { }, done);
         }
     );
 });
