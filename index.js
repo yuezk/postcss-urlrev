@@ -192,7 +192,7 @@ function defaultReplacer(hashLength) {
  *
  * @param  {String} basePath - the basePath relative to
  * @param  {Object} opts     - the options
- * @return {Promise}          - the Promise
+ * @return {Promise}         - the Promise
  */
 
 function processUrl(basePath, opts) {
