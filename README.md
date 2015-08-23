@@ -6,14 +6,16 @@
 
 
 ```css
+/* Input example */
 .foo {
-    background: url(images/test.png);
+    background: url(images/test.png) 0 0 no-repeat;
 }
 ```
 
 ```css
+/* Output example */
 .foo {
-    background: url(images/test.png?v=e19ac7dee6);
+    background: url(images/test.png?v=e19ac7dee6) 0 0 no-repeat;
 }
 ```
 
