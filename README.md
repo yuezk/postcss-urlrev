@@ -1,6 +1,6 @@
 # postcss-urlrev
 
-> [PostCSS] plugin for css url revision inspired by [postcss-url]
+> [PostCSS] plugin for css url revision, inspired by [postcss-url]
 
 [![Build Status][ci-img]][ci]
 
