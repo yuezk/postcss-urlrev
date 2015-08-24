@@ -49,7 +49,7 @@ describe('postcss-urlrev', function () {
         'should add the local file\'s md5 hash to the end of the url',
         function (done) {
             var input = 'test/fixtures/test-local.css';
-            var output = 'test/expected/test-local.css';
+            var output = 'test/fixtures/expected/test-local.css';
             test(input, output, { }, done);
         }
     );
@@ -58,7 +58,7 @@ describe('postcss-urlrev', function () {
         'should skip the data uri',
         function (done) {
             var input = 'test/fixtures/test-datauri.css';
-            var output = 'test/expected/test-datauri.css';
+            var output = 'test/fixtures/expected/test-datauri.css';
             test(input, output, { }, done);
         }
     );
@@ -67,7 +67,7 @@ describe('postcss-urlrev', function () {
         'should skip the absolute path',
         function (done) {
             var input = 'test/fixtures/test-absolute.css';
-            var output = 'test/expected/test-absolute.css';
+            var output = 'test/fixtures/expected/test-absolute.css';
             test(input, output, { }, done);
         }
     );
@@ -77,7 +77,7 @@ describe('postcss-urlrev', function () {
         'other parameter already exists in the querystring',
         function (done) {
             var input = 'test/fixtures/test-append-hash.css';
-            var output = 'test/expected/test-append-hash.css';
+            var output = 'test/fixtures/expected/test-append-hash.css';
             test(input, output, { }, done);
         }
     );
@@ -87,7 +87,7 @@ describe('postcss-urlrev', function () {
         '`v` already exists in the query string',
         function (done) {
             var input = 'test/fixtures/test-replace-hash.css';
-            var output = 'test/expected/test-replace-hash.css';
+            var output = 'test/fixtures/expected/test-replace-hash.css';
             test(input, output, { }, done);
         }
     );
@@ -96,7 +96,7 @@ describe('postcss-urlrev', function () {
         'should add custom hash when the `opts.replacer` is specified',
         function (done) {
             var input = 'test/fixtures/test-replacer.css';
-            var output = 'test/expected/test-replacer.css';
+            var output = 'test/fixtures/expected/test-replacer.css';
             var replacer = function (url, hash) {
                 return url + '?' + hash;
             };
@@ -108,7 +108,7 @@ describe('postcss-urlrev', function () {
         'should handle the remote url if the `opts.includeRemote` is specified',
         function (done) {
             var input = 'test/fixtures/test-remote.css';
-            var output = 'test/expected/test-remote.css';
+            var output = 'test/fixtures/expected/test-remote.css';
             test(input, output, { includeRemote: true }, done);
         }
     );
@@ -117,7 +117,7 @@ describe('postcss-urlrev', function () {
         'should substitude the hash if the `opts.hashLength` is specified',
         function (done) {
             var input = 'test/fixtures/test-hash-length.css';
-            var output = 'test/expected/test-hash-length.css';
+            var output = 'test/fixtures/expected/test-hash-length.css';
             test(input, output, { hashLength: 22 }, done);
         }
     );
@@ -126,7 +126,7 @@ describe('postcss-urlrev', function () {
         'should append empty hash when the `opts.hashLength` is less than zero',
         function (done) {
             var input = 'test/fixtures/test-hash-length-zero.css';
-            var output = 'test/expected/test-hash-length-zero.css';
+            var output = 'test/fixtures/expected/test-hash-length-zero.css';
             test(input, output, { hashLength: -1 }, done);
         }
     );
@@ -136,7 +136,7 @@ describe('postcss-urlrev', function () {
         'is greater than the length of hash',
         function (done) {
             var input = 'test/fixtures/test-hash-length-max.css';
-            var output = 'test/expected/test-hash-length-max.css';
+            var output = 'test/fixtures/expected/test-hash-length-max.css';
             test(input, output, { hashLength: 100 }, done);
         }
     );
@@ -145,7 +145,7 @@ describe('postcss-urlrev', function () {
         'should not affect other value in the background property',
         function (done) {
             var input = 'test/fixtures/test-url-other.css';
-            var output = 'test/expected/test-url-other.css';
+            var output = 'test/fixtures/expected/test-url-other.css';
             test(input, output, { }, done);
         }
     );
@@ -154,7 +154,7 @@ describe('postcss-urlrev', function () {
         'should append hash to each url() in the background property',
         function (done) {
             var input = 'test/fixtures/test-multi-url.css';
-            var output = 'test/expected/test-multi-url.css';
+            var output = 'test/fixtures/expected/test-multi-url.css';
             test(input, output, { }, done);
         }
     );
