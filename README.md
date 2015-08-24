@@ -40,7 +40,7 @@ Type: `string`
 Default: `the css file's folder`
 
 The `basePath` is used to calculate the absolute path of the url resource. 
-By default, the value is the folder path of the css source file. If your should
+By default, the value is the folder path of the css source file. You should
 set this value based on your environment.
 
 ### includeRemote
