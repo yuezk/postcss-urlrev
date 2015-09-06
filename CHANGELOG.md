@@ -1,3 +1,7 @@
+# 1.1.2 - 2015-09-06
+
+* Remove `eachDecl`, use `walkDecls` instead
+
 # 1.1.1 - 2015-09-06
 
 * Upgrade postcss to 5.0.0

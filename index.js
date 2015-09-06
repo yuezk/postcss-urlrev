@@ -271,7 +271,7 @@ module.exports = postcss.plugin('postcss-urlrev', function (opts) {
             : '.';
 
         var actions = [];
-        css.eachDecl(function (decl) {
+        css.walkDecls(function (decl) {
             if (decl.value && decl.value.indexOf('url(') > -1) {
                 actions.push(processDecl(result, decl, from, opts));
             }
