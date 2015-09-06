@@ -21,7 +21,7 @@
   "homepage": "https://github.com/yuezk/postcss-urlrev",
   "dependencies": {
     "bluebird": "^2.9.34",
-    "postcss": "^4.1.13"
+    "postcss": "^5.0.0"
   },
   "devDependencies": {
     "chai": "^3.0.0",
