@@ -1,3 +1,7 @@
+# 1.1.1 - 2015-09-06
+
+* Upgrade postcss to 5.0.0
+
 # 1.1.0 - 2015-08-22
 
 * Add multiple url() support 
