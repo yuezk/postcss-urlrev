@@ -64,11 +64,20 @@ describe('postcss-urlrev', function () {
     );
 
     it(
-        'should skip the absolute path',
+        'should skip the absolute path when no absolute path is set',
         function (done) {
             var input = 'test/fixtures/test-absolute.css';
-            var output = 'test/fixtures/expected/test-absolute.css';
+            var output = 'test/fixtures/expected/test-absolute-skipped.css';
             test(input, output, { }, done);
+        }
+    );
+
+    it(
+        'should include the absolute path when absolute path is set',
+        function (done) {
+            var input = 'test/fixtures/test-absolute.css';
+            var output = 'test/fixtures/expected/test-absolute-included.css';
+            test(input, output, { absolutePath: path.join(__dirname, 'fixtures') }, done);
         }
     );
 

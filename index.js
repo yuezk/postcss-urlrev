@@ -22,6 +22,17 @@ function isRemotePath(filePath) {
 }
 
 /**
+ * Return `true` if the given filePath is an absolute url
+ *
+ * @param  {String}  filePath - path
+ * @return {Boolean}
+ */
+
+function isAbsolutePath(filePath) {
+    return filePath.indexOf('/') === 0;
+}
+
+/**
  * Whether or not the url should be inluded
  *
  * @param  {Object} meta - url meta info
@@ -31,10 +42,13 @@ function isRemotePath(filePath) {
 
 function validUrl(meta, opts) {
     // ignore absolute urls, hashes or data uris
-    if (meta.value.indexOf('/') === 0 ||
-        meta.value.indexOf('data:') === 0 ||
+    if (meta.value.indexOf('data:') === 0 ||
         meta.value.indexOf('#') === 0
     ) {
+        return false;
+    }
+
+    if (!opts.absolutePath && isAbsolutePath(meta.value)) {
         return false;
     }
 
@@ -78,17 +92,21 @@ function getUrls(value, opts) {
  * Get the absolute path of the url, relative to the basePath
  *
  * @param  {String} str      - the url
- * @param  {String} basePath - the relative path
- * @return {String}          - the absolute path
+ * @param  {String} relativePath - the relative path
+ * @param  {String} absolutePath - the absolute path
+ * @return {String} - the full path to the file
  */
 
-function getResourcePath(str, basePath) {
+function getResourcePath(str, relativePath, absolutePath) {
+    var pathname = url.parse(str).pathname;
     var filePath;
 
     if (isRemotePath(str)) {
         filePath = str;
+    } else if (isAbsolutePath(str)) {
+        filePath = path.join(absolutePath, pathname);
     } else {
-        filePath = path.resolve(basePath, url.parse(str).pathname);
+        filePath = path.resolve(relativePath, pathname);
     }
     return Promise.resolve(filePath);
 }
@@ -190,14 +208,14 @@ function defaultReplacer(hashLength) {
 /**
  * Process the single `url()` pattern
  *
- * @param  {String} basePath - the basePath relative to
- * @param  {Object} opts     - the options
- * @return {Promise}         - the Promise
+ * @param  {String} relativePath - the relativePath relative to
+ * @param  {Object} opts         - the options
+ * @return {Promise}             - the Promise
  */
 
-function processUrl(basePath, opts) {
+function processUrl(relativePath, opts) {
     return function (meta) {
-        return getResourcePath(meta.value, basePath)
+        return getResourcePath(meta.value, relativePath, opts.absolutePath)
             .then(getHash)
             .then(createUrl(meta, opts))
             .then(function (newUrl) {
@@ -252,9 +270,9 @@ function handleError(result, decl) {
 function processDecl(result, decl, from, opts) {
     var inputfile = decl.source && decl.source.input && decl.source.input.file;
     var dirname = inputfile ? path.dirname(inputfile) : path.dirname(from);
-    var basePath = opts.basePath || dirname;
+    var relativePath = opts.basePath || opts.relativePath || dirname; //Still accept basePath for backwards compability
 
-    return Promise.map(getUrls(decl.value, opts), processUrl(basePath, opts))
+    return Promise.map(getUrls(decl.value, opts), processUrl(relativePath, opts))
         .then(repalceUrls(decl.value))
         .then(function (newValue) {
             decl.value = newValue;
