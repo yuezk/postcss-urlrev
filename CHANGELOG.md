@@ -1,3 +1,8 @@
+# 1.2.0 - 2015-09-23
+
+* Add support for absolute paths (by Christian Holm).
+* Change `option.basePath` to `option.relativePath`, the old still works (by Christian Holm).
+
 # 1.1.2 - 2015-09-06
 
 * Remove `eachDecl`, use `walkDecls` instead

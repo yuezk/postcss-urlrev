@@ -48,7 +48,7 @@ function validUrl(meta, opts) {
         return false;
     }
 
-    if (!opts.absolutePath && isAbsolutePath(meta.value)) {
+    if (!opts.absolutePath && isAbsolutePath(meta.value)) {
         return false;
     }
 
@@ -91,7 +91,7 @@ function getUrls(value, opts) {
 /**
  * Get the absolute path of the url, relative to the basePath
  *
- * @param  {String} str      - the url
+ * @param  {String} str          - the url
  * @param  {String} relativePath - the relative path
  * @param  {String} absolutePath - the absolute path
  * @return {String} - the full path to the file
@@ -270,7 +270,7 @@ function handleError(result, decl) {
 function processDecl(result, decl, from, opts) {
     var inputfile = decl.source && decl.source.input && decl.source.input.file;
     var dirname = inputfile ? path.dirname(inputfile) : path.dirname(from);
-    var relativePath = opts.basePath || opts.relativePath || dirname; //Still accept basePath for backwards compability
+    var relativePath = opts.basePath || opts.relativePath || dirname; // Still accept basePath for backwards compatibility
 
     return Promise.map(getUrls(decl.value, opts), processUrl(relativePath, opts))
         .then(repalceUrls(decl.value))
@@ -284,9 +284,9 @@ module.exports = postcss.plugin('postcss-urlrev', function (opts) {
     opts.replacer = opts.replacer || defaultReplacer(opts.hashLength);
 
     return function (css, result) {
-        var from = result.opts.from
-            ? path.resolve(result.opts.from)
-            : '.';
+        var from = result.opts.from ?
+            path.resolve(result.opts.from) :
+            '.';
 
         var actions = [];
         css.walkDecls(function (decl) {
