@@ -41,10 +41,8 @@ function isAbsolutePath(filePath) {
  */
 
 function validUrl(meta, opts) {
-    // ignore absolute urls, hashes or data uris
-    if (meta.value.indexOf('data:') === 0 ||
-        meta.value.indexOf('#') === 0
-    ) {
+    // ignore hashes or data uris
+    if (meta.value.indexOf('data:') === 0 || meta.value.indexOf('#') === 0) {
         return false;
     }
 
@@ -242,7 +240,6 @@ function repalceUrls(raw) {
     };
 }
 
-
 /**
  * The error handler
  *
@@ -270,7 +267,7 @@ function handleError(result, decl) {
 function processDecl(result, decl, from, opts) {
     var inputfile = decl.source && decl.source.input && decl.source.input.file;
     var dirname = inputfile ? path.dirname(inputfile) : path.dirname(from);
-    var relativePath = opts.basePath || opts.relativePath || dirname; // Still accept basePath for backwards compatibility
+    var relativePath = opts.basePath || opts.relativePath || dirname;
 
     return Promise.map(getUrls(decl.value, opts), processUrl(relativePath, opts))
         .then(repalceUrls(decl.value))
