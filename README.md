@@ -34,14 +34,22 @@ postcss(urlrev({ /* options */ }))
 
 ## Options
 
-### basePath
+### relativePath
 
 Type: `string`  
 Default: `the css file's folder`
 
-The `basePath` is used to calculate the absolute path of the url resource. 
+The `relativePath` is used to calculate the absolute path of the url resource. 
 By default, the value is the folder path of the css source file. You should
 set this value based on your environment.
+
+### absolutePath
+
+Type: `string`  
+Default: `undefined`
+
+The `absolutePath` is used to calculate the absolute path of the url resources that have an absolute path, f.ex. `/images/test.png`. 
+If `absolutePath` is not set, absolute url's will be skipped, as the full path to the resource cannot be resolved.
 
 ### includeRemote
 
