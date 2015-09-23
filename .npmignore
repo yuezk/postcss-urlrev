@@ -1,9 +1,8 @@
-.gitignore
-
-node_modules/
-
 coverage/
 test/
-.travis.yml
 
 gulpfile.js
+
+.gitignore
+.travis.yml
+.eslintrc

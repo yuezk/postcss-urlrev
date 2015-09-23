@@ -92,7 +92,7 @@ function getUrls(value, opts) {
  * @param  {String} str          - the url
  * @param  {String} relativePath - the relative path
  * @param  {String} absolutePath - the absolute path
- * @return {String} - the full path to the file
+ * @return {String}              - the full path to the file
  */
 
 function getResourcePath(str, relativePath, absolutePath) {
