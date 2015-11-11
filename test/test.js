@@ -77,7 +77,9 @@ describe('postcss-urlrev', function () {
         function (done) {
             var input = 'test/fixtures/test-absolute.css';
             var output = 'test/fixtures/expected/test-absolute-included.css';
-            test(input, output, { absolutePath: path.join(__dirname, 'fixtures') }, done);
+            test(input, output, {
+                absolutePath: path.join(__dirname, 'fixtures')
+            }, done);
         }
     );
 

@@ -101,7 +101,7 @@ function getResourcePath(str, relativePath, absolutePath) {
 
     if (isRemotePath(str)) {
         filePath = str;
-    } else if (isAbsolutePath(str)) {
+    } else if (isAbsolutePath(str)) {
         filePath = path.join(absolutePath, pathname);
     } else {
         filePath = path.resolve(relativePath, pathname);
@@ -269,7 +269,8 @@ function processDecl(result, decl, from, opts) {
     var dirname = inputfile ? path.dirname(inputfile) : path.dirname(from);
     var relativePath = opts.basePath || opts.relativePath || dirname;
 
-    return Promise.map(getUrls(decl.value, opts), processUrl(relativePath, opts))
+    return Promise.map(getUrls(decl.value, opts),
+                        processUrl(relativePath, opts))
         .then(repalceUrls(decl.value))
         .then(function (newValue) {
             decl.value = newValue;
