@@ -1,3 +1,7 @@
+# 1.2.1 - 2016-07-23
+
+* Add `options.hashFunction` support
+
 # 1.2.0 - 2015-09-23
 
 * Add support for absolute paths (by Christian Holm).
