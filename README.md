@@ -59,6 +59,17 @@ Default: `false`
 If you set it to `true`, it will handle the remote url, request the remote 
 resource and calculate the md5 hash.
 
+### hashFunction(filename, baseName)
+
+Type: `function`  
+Default: `undefined`
+
+If specified, it will use the `hashFunction` to generate hash strings.
+
+The function accepts two parameters:
+ - `filename`: the absolute file path. (e.g. `/path/to/test.png`)
+ - `baseName`: the base name of the file. (e.g. `test.png`)
+
 ### replacer(url, hash)
 
 Type: `function`  
