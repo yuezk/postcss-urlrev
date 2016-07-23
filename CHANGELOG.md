@@ -1,4 +1,4 @@
-# 1.2.1 - 2016-07-23
+# 1.3.0 - 2016-07-23
 
 * Add `options.hashFunction` support
 
