@@ -147,17 +147,29 @@ function getLocalFileHash(file) {
 }
 
 /**
- * Get the hash of the given path
+ * Get the hash function
  *
- * @param  {String} filePath - the file path
- * @return {Promise}         - the Promise
+ * @param  {Object} opts - the options
+ * @return {Function}    - the hash function
  */
 
-function getHash(filePath) {
-    if (isRemotePath(filePath)) {
-        return getRemoteFileHash(filePath);
-    }
-    return getLocalFileHash(filePath);
+function getHash(opts) {
+    /**
+     * Get the hash of the given path
+     *
+     * @param  {String} filePath - the file path
+     * @return {Promise}         - the Promise
+     */
+
+    return function hashFunction(filePath) {
+        if (typeof opts.hashFunction === 'function') {
+            return opts.hashFunction(filePath, path.basename(filePath));
+        }
+        if (isRemotePath(filePath)) {
+            return getRemoteFileHash(filePath);
+        }
+        return getLocalFileHash(filePath);
+    };
 }
 
 /**
@@ -214,7 +226,7 @@ function defaultReplacer(hashLength) {
 function processUrl(relativePath, opts) {
     return function (meta) {
         return getResourcePath(meta.value, relativePath, opts.absolutePath)
-            .then(getHash)
+            .then(getHash(opts))
             .then(createUrl(meta, opts))
             .then(function (newUrl) {
                 meta.newUrl = newUrl;

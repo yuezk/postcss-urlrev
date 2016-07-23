@@ -1,5 +1,6 @@
 var fs = require('fs');
 var path = require('path');
+var crypto = require('crypto');
 var postcss = require('postcss');
 var expect  = require('chai').expect;
 var express = require('express');
@@ -112,6 +113,21 @@ describe('postcss-urlrev', function () {
                 return url + '?' + hash;
             };
             test(input, output, { replacer: replacer }, done);
+        }
+    );
+
+    it(
+        'should use custom hash when `opts.hashFunction` is specified',
+        function (done) {
+            var input = 'test/fixtures/test-hash-function.css';
+            var output = 'test/fixtures/expected/test-hash-function.css';
+            var hashFunction = function (filename, baseName) {
+                expect(baseName).to.eql('test.png');
+                return crypto.createHash('sha1')
+                    .update(fs.readFileSync(filename))
+                    .digest('hex');
+            };
+            test(input, output, { hashFunction: hashFunction }, done);
         }
     );
 
