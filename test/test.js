@@ -199,7 +199,6 @@ describe('postcss-urlrev', function () {
         var input = 'test/fixtures/test-error.css';
         var output = 'test/fixtures/expected/test-error.css';
         var filePath = path.join(__dirname, '/fixtures/images/hello.png');
-        var message =  'no such file or directory, open \'' + filePath + '\'';
-        test(input, output, { }, done, message);
+        test(input, output, { }, done, filePath);
     });
 });
