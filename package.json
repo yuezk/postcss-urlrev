@@ -25,14 +25,17 @@
   },
   "devDependencies": {
     "chai": "^3.0.0",
+    "coveralls": "^2.11.11",
     "express": "^4.13.3",
     "gulp": "^3.9.0",
     "gulp-eslint": "^0.14.0",
     "gulp-mocha": "^2.1.2",
+    "istanbul": "^0.4.4",
     "mocha": "^2.2.5"
   },
   "scripts": {
     "test": "./node_modules/.bin/mocha",
-    "coverage": "istanbul cover node_modules/.bin/_mocha -- -R spec"
+    "coverage": "istanbul cover _mocha -- -R spec",
+    "coveralls": "npm run coverage && cat ./coverage/lcov.info | coveralls && rm -rf ./coverage"
   }
 }

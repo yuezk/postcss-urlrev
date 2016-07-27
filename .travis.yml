@@ -4,3 +4,4 @@ node_js:
   - iojs
   - "0.12"
   - "4.0"
+after_script: "npm run coveralls"
