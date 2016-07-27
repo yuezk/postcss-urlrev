@@ -29,7 +29,7 @@ var test = function (input, output, opts, done, warnings) {
                     var expectedWarning = Array.isArray(warnings)
                         ? warnings[i]
                         : warnings;
-                    expect(warn.text).to.eql(expectedWarning);
+                    expect(warn.text).to.contain(expectedWarning);
                 });
             } else {
                 expect(result.warnings()).to.be.empty;
@@ -199,8 +199,7 @@ describe('postcss-urlrev', function () {
         var input = 'test/fixtures/test-error.css';
         var output = 'test/fixtures/expected/test-error.css';
         var filePath = path.join(__dirname, '/fixtures/images/hello.png');
-        var message = 'ENOENT: no such file or directory, open \'' +
-            filePath + '\'';
+        var message =  'no such file or directory, open \'' + filePath + '\'';
         test(input, output, { }, done, message);
     });
 });
