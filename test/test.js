@@ -16,7 +16,7 @@ app.use(express.static(path.join(__dirname, 'fixtures')));
 // md5 images/postcss.png => fc586a14d21f0db23f8d2dc58e62ff6c
 // md5 test-local.css => 85c1934d3ceb0ae4c4b7f6f3814a79c9
 
-var test = function (input, output, opts, done) {
+var test = function (input, output, opts, done, warnings) {
     var css = fs.readFileSync(input, 'utf-8');
     var expected = fs.readFileSync(output, 'utf-8');
 
@@ -24,7 +24,16 @@ var test = function (input, output, opts, done) {
         .process(css, { from: input })
         .then(function (result) {
             expect(result.css).to.eql(expected);
-            expect(result.warnings()).to.be.empty;
+            if (warnings) {
+                result.warnings().forEach(function (warn, i) {
+                    var expectedWarning = Array.isArray(warnings)
+                        ? warnings[i]
+                        : warnings;
+                    expect(warn.text).to.eql(expectedWarning);
+                });
+            } else {
+                expect(result.warnings()).to.be.empty;
+            }
             done();
         }).catch(function (error) {
             done(error);
@@ -185,4 +194,13 @@ describe('postcss-urlrev', function () {
             test(input, output, { }, done);
         }
     );
+
+    it('should show warn when error', function (done) {
+        var input = 'test/fixtures/test-error.css';
+        var output = 'test/fixtures/expected/test-error.css';
+        var filePath = path.join(__dirname, '/fixtures/images/hello.png');
+        var message = 'ENOENT: no such file or directory, open \'' +
+            filePath + '\'';
+        test(input, output, { }, done, message);
+    });
 });

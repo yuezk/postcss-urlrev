@@ -262,7 +262,7 @@ function repalceUrls(raw) {
 
 function handleError(result, decl) {
     return function (err) {
-        result.warn(err, {node: decl});
+        result.warn(err.message || err, {node: decl});
     };
 }
 
@@ -281,12 +281,15 @@ function processDecl(result, decl, from, opts) {
     var dirname = inputfile ? path.dirname(inputfile) : path.dirname(from);
     var relativePath = opts.basePath || opts.relativePath || dirname;
 
-    return Promise.map(getUrls(decl.value, opts),
-                        processUrl(relativePath, opts))
+    return Promise.map(
+            getUrls(decl.value, opts),
+            processUrl(relativePath, opts)
+        )
         .then(repalceUrls(decl.value))
         .then(function (newValue) {
             decl.value = newValue;
-        }, handleError(result, decl));
+        })
+        .catch(handleError(result, decl));
 }
 
 module.exports = postcss.plugin('postcss-urlrev', function (opts) {

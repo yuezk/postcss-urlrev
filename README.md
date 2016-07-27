@@ -2,7 +2,8 @@
 
 > [PostCSS] plugin for css url revision, inspired by [postcss-url]
 
-[![Build Status][ci-img]][ci][![Coverage Status](https://coveralls.io/repos/github/yuezk/postcss-urlrev/badge.svg?branch=master)](https://coveralls.io/github/yuezk/postcss-urlrev?branch=master)
+[![Build Status][ci-img]][ci]
+[![Coverage Status][co-img]][co]
 
 
 ```css
@@ -101,8 +102,9 @@ The length of the hash string, the default value is `10`. That's enough!
 
 [MIT]
 
-
 [PostCSS]:      https://github.com/postcss/postcss
+[co-img]:       https://coveralls.io/repos/github/yuezk/postcss-urlrev/badge.svg?branch=master
+[co]:           https://coveralls.io/github/yuezk/postcss-urlrev?branch=master
 [ci-img]:       https://travis-ci.org/yuezk/postcss-urlrev.svg
 [ci]:           https://travis-ci.org/yuezk/postcss-urlrev
 [postcss-url]:  https://github.com/postcss/postcss-url
