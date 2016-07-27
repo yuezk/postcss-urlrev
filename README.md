@@ -2,7 +2,7 @@
 
 > [PostCSS] plugin for css url revision, inspired by [postcss-url]
 
-[![Build Status][ci-img]][ci]
+[![Build Status][ci-img]][ci][![Coverage Status](https://coveralls.io/repos/github/yuezk/postcss-urlrev/badge.svg?branch=master)](https://coveralls.io/github/yuezk/postcss-urlrev?branch=master)
 
 
 ```css
