@@ -18,7 +18,7 @@ var postcss = require('postcss');
  */
 
 function isRemotePath(filePath) {
-    return /^https?:\/\//.test(filePath);
+    return /^(?:https?:)?\/\//.test(filePath);
 }
 
 /**
