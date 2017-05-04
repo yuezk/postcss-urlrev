@@ -18,7 +18,11 @@ var postcss = require('postcss');
  */
 
 function isRemotePath(filePath) {
-    return /^https?:\/\//.test(filePath);
+    return /^(?:https?:)?\/\//.test(filePath);
+}
+
+function normalizeUrl(url) {
+    return /^\/\//.test(url) ? 'http:' + url : url;
 }
 
 /**
@@ -29,7 +33,7 @@ function isRemotePath(filePath) {
  */
 
 function isAbsolutePath(filePath) {
-    return filePath.indexOf('/') === 0;
+    return /^\/(?!\/)/.test(filePath);
 }
 
 /**
@@ -119,7 +123,7 @@ function getResourcePath(str, relativePath, absolutePath) {
 function getRemoteFileHash(file) {
     return new Promise(function (resolve, reject) {
         var client = /^https/.test(file) ? https : http;
-        client.get(file, function (res) {
+        client.get(normalizeUrl(file), function (res) {
             var md5 = crypto.createHash('md5');
 
             res.on('data', function (chunk) {
