@@ -1,3 +1,7 @@
 body {
     background: url(http://127.0.0.1:10010/images/test.png);
 }
+
+body {
+    background: url(//127.0.0.1:10010/images/test.png);
+}
