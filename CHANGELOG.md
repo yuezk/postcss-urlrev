@@ -1,3 +1,13 @@
+
+1.3.1 / 2017-05-04
+==================
+
+  * Merge branch 'ln-e-remote-url-patch'
+  * Add remote url test case
+  * Improve absolute path test
+  * Paths started with double slash also remote
+  * 100% test coverage🍻
+
 # 1.3.0 - 2016-07-23
 
 * Add `options.hashFunction` support
