@@ -2,6 +2,7 @@ sudo: false
 language: node_js
 node_js:
   - iojs
-  - "0.12"
-  - "4.0"
+  - "4"
+  - "6"
+  - "node"
 after_script: "npm run coveralls"
