@@ -1,7 +1,6 @@
 'use strict';
 
-var Promise = require('bluebird');
-var fs = Promise.promisifyAll(require('fs'));
+var fs = require('fs');
 var path = require('path');
 var url = require('url');
 var http = require('http');
@@ -145,8 +144,11 @@ function getRemoteFileHash(file) {
  */
 
 function getLocalFileHash(file) {
-    return fs.readFileAsync(file).then(function (contents) {
-        return crypto.createHash('md5').update(contents).digest('hex');
+    return new Promise(function (resolve, reject) {
+        fs.readFile(file, function (err, contents) {
+            if (err) return reject(err);
+            resolve(crypto.createHash('md5').update(contents).digest('hex'));
+        });
     });
 }
 
@@ -284,11 +286,9 @@ function processDecl(result, decl, from, opts) {
     var inputfile = decl.source && decl.source.input && decl.source.input.file;
     var dirname = inputfile ? path.dirname(inputfile) : path.dirname(from);
     var relativePath = opts.basePath || opts.relativePath || dirname;
+    var actions = getUrls(decl.value, opts).map(processUrl(relativePath, opts));
 
-    return Promise.map(
-            getUrls(decl.value, opts),
-            processUrl(relativePath, opts)
-        )
+    return Promise.all(actions)
         .then(repalceUrls(decl.value))
         .then(function (newValue) {
             decl.value = newValue;
