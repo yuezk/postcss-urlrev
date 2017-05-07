@@ -22,8 +22,16 @@
 
 ## Install
 
+For `postcss 6.x`
+
 ```sh
 npm install --save-dev postcss-urlrev
+```
+
+and for `postcss 5.x`
+
+```sh
+npm install --save-dev postcss-urlrev@1.x
 ```
 
 ## Usage
