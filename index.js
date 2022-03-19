@@ -7,8 +7,6 @@ var http = require('http');
 var https = require('https');
 var crypto = require('crypto');
 
-var postcss = require('postcss');
-
 /**
  * Return `true` if the given path is http/https
  *
@@ -296,22 +294,27 @@ function processDecl(result, decl, from, opts) {
         .catch(handleError(result, decl));
 }
 
-module.exports = postcss.plugin('postcss-urlrev', function (opts) {
+module.exports = function (opts) {
     opts = opts || {};
     opts.replacer = opts.replacer || defaultReplacer(opts.hashLength);
 
-    return function (css, result) {
-        var from = result.opts.from ?
-            path.resolve(result.opts.from) :
-            '.';
+    return {
+        postcssPlugin: 'postcss-urlrev',
+        Once(root, { result }) {
+            var from = result.opts.from ?
+                path.resolve(result.opts.from) :
+                '.';
 
-        var actions = [];
-        css.walkDecls(function (decl) {
-            if (decl.value && decl.value.indexOf('url(') > -1) {
-                actions.push(processDecl(result, decl, from, opts));
-            }
-        });
+            var actions = [];
+            root.walkDecls(function (decl) {
+                if (decl.value && decl.value.indexOf('url(') > -1) {
+                    actions.push(processDecl(result, decl, from, opts));
+                }
+            });
 
-        return Promise.all(actions);
+            return Promise.all(actions);
+        }
     };
-});
+};
+
+module.exports.postcss = true;

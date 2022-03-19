@@ -19,22 +19,31 @@
     "url": "https://github.com/yuezk/postcss-urlrev/issues"
   },
   "homepage": "https://github.com/yuezk/postcss-urlrev",
-  "dependencies": {
-    "postcss": "^6.0.0"
-  },
   "devDependencies": {
     "chai": "^3.5.0",
+    "clean-publish": "^4.0.0",
     "coveralls": "^2.13.1",
     "express": "^4.15.2",
     "gulp": "^3.9.1",
     "gulp-eslint": "^0.14.0",
     "gulp-mocha": "^2.2.0",
     "istanbul": "^0.4.5",
-    "mocha": "^2.5.3"
+    "mocha": "^2.5.3",
+    "postcss": "^8.4.12"
+  },
+  "peerDependencies": {
+    "postcss": "^8.4.12"
+  },
+  "engines": {
+    "node": "^10 || ^12 || >=14"
   },
   "scripts": {
     "test": "mocha",
     "coverage": "istanbul cover _mocha -- -R spec",
-    "coveralls": "npm run coverage && cat ./coverage/lcov.info | coveralls && rm -rf ./coverage"
+    "coveralls": "npm run coverage && cat ./coverage/lcov.info | coveralls && rm -rf ./coverage",
+    "publish": "clean-publish"
+  },
+  "clean-publish": {
+    "packageManager": "yarn"
   }
 }
