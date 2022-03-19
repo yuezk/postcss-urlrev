@@ -41,6 +41,7 @@
     "test": "mocha",
     "coverage": "istanbul cover _mocha -- -R spec",
     "coveralls": "npm run coverage && cat ./coverage/lcov.info | coveralls && rm -rf ./coverage",
+    "prepublish": "mocha",
     "publish": "clean-publish"
   },
   "clean-publish": {
